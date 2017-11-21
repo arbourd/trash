@@ -6,10 +6,10 @@ Move items to the trash in macOS without having to call `rm -rf`.
 
 ## Install
 
+With [Homebrew](https://brew.sh/)
+
 ```sh
-$ git clone https://github.com/arbourd/trash.git
-$ cd trash
-$ make install
+$ brew install arbourd/tap/trash
 ```
 
 ## Usage
