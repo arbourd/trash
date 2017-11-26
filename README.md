@@ -1,6 +1,6 @@
-# trash
+# trashOS
 
-[![Build Status](https://travis-ci.org/arbourd/trash.svg?branch=master)](https://travis-ci.org/arbourd/trash)
+[![Build Status](https://travis-ci.org/arbourd/trashOS.svg?branch=master)](https://travis-ci.org/arbourd/trashOS)
 
 Move items to the trash in macOS without having to call `rm -rf`.
 
@@ -9,7 +9,7 @@ Move items to the trash in macOS without having to call `rm -rf`.
 With [Homebrew](https://brew.sh/)
 
 ```sh
-$ brew install arbourd/tap/trash
+$ brew install arbourd/tap/trashOS
 ```
 
 ## Usage
