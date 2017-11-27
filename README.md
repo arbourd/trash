@@ -21,7 +21,7 @@ $ trash [file ...]
 ## See Also
 
 - [ali-rantakari/trash](https://github.com/ali-rantakari/trash)
-- [arbourd/fish-trash](https://github.com/arbourd/trash)
+- [arbourd/fish-trash](https://github.com/arbourd/fish-trash)
 
 ## License
 
