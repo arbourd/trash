@@ -8,13 +8,13 @@ Move items to the trash in macOS without having to call `rm -rf`.
 
 With [Homebrew](https://brew.sh/)
 
-```sh
+```console
 $ brew install arbourd/tap/trashOS
 ```
 
 ## Usage
 
-```sh
+```console
 $ trash [file ...]
 ```
 

@@ -7,9 +7,9 @@ public struct Trash {
         let loop = CFRunLoopGetCurrent()
 
         DispatchQueue.main.async {
-            NSWorkspace.shared.recycle(files, completionHandler: { recycled, err in
+            NSWorkspace.shared.recycle(files, completionHandler: { _, err in
                 if let err = err as NSError? {
-                    error = TrashError(reason: err.localizedDescription as String!)
+                    error = TrashError(reason: err.localizedDescription)
                 }
 
                 CFRunLoopStop(loop)

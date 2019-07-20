@@ -1,7 +1,7 @@
 build:
-	swift build -c release -Xswiftc -static-stdlib
+	swift build --static-swift-stdlib -c release
 
 test:
 	@swift test
 
-.PHONY: build install test
+.PHONY: build test
