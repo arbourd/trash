@@ -20,6 +20,8 @@ struct CLI {
         let args = CommandLine.arguments.dropFirst()
 
         switch args.first {
+        case nil:
+            print(usage)
         case "-h"?, "--help"?:
             print(usage)
         case "-v"?, "--version"?:
