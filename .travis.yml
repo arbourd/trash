@@ -1,9 +1,5 @@
 language: objective-c
-
-matrix:
-  include:
-    - osx_image: xcode11
-    - osx_image: xcode10.2
+osx_image: xcode10.2
 
 addons:
   homebrew:
@@ -14,3 +10,8 @@ script:
   - swift package generate-xcodeproj
   - swift test
   - swiftlint
+
+branches:
+  only:
+  - master
+  - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
