@@ -1,5 +1,5 @@
 build:
-	swift build --static-swift-stdlib -c release
+	swift build -c release
 
 test:
 	@swift test
