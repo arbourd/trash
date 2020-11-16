@@ -1,7 +1,7 @@
 import Foundation
 import Trash
 
-let version = "0.2.0"
+let version = "0.3.0"
 let usage = """
 Usage: trash [file ...]
 """
