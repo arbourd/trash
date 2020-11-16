@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-10.15, macos-11.0]
+        os: [macos-11.0, macos-10.15, macos-10.14]
 
     steps:
      - uses: actions/checkout@v2
@@ -32,7 +32,7 @@ jobs:
       - uses: mislav/bump-homebrew-formula-action@v1
         if: "!contains(github.ref, '-')" # skip prereleases
         with:
-          formula-name: trashOS
+          formula-name: trashos
           homebrew-tap: arbourd/homebrew-tap
           base-branch: main
         env:
