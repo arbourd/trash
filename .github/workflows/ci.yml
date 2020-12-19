@@ -17,7 +17,6 @@ jobs:
 
     steps:
      - uses: actions/checkout@v2
-
      - run: swift package generate-xcodeproj
      - run: swiftlint
      - run: swift build -v
@@ -25,6 +24,28 @@ jobs:
 
   release:
     needs: test
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: macos-11.0
+
+    steps:
+     - uses: actions/checkout@v2
+     - run: swift package generate-xcodeproj
+     - run: swift build -v
+
+     - id: vars
+       run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+
+     - run: cp .build/x86_64-apple-macosx/release/TrashCLI trash
+     - run: tar -zcvf trash-${{ steps.vars.outputs.tag }}-darwin-amd64.tar.gz trash
+
+     - uses: alexellis/upload-assets@0.2.3
+       with:
+         asset_paths: '["trash*.tar.gz"]'
+       env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  bump:
+    needs: release
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
 
