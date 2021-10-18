@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-11.0, macos-10.15]
+        os: [macos-11, macos-10.15]
 
     steps:
      - uses: actions/checkout@v2
@@ -25,7 +25,7 @@ jobs:
   release:
     needs: test
     if: startsWith(github.ref, 'refs/tags/v')
-    runs-on: macos-11.0
+    runs-on: macos-11
 
     steps:
      - uses: actions/checkout@v2
@@ -43,18 +43,3 @@ jobs:
          asset_paths: '["trash*.tar.gz"]'
        env:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  bump:
-    needs: release
-    if: startsWith(github.ref, 'refs/tags/v')
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: mislav/bump-homebrew-formula-action@v1
-        if: "!contains(github.ref, '-')" # skip prereleases
-        with:
-          formula-name: trashos
-          homebrew-tap: arbourd/homebrew-tap
-          base-branch: main
-        env:
-          COMMITTER_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
