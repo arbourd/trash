@@ -47,7 +47,7 @@ jobs:
      - run: mv ${{ steps.vars.outputs.arm64-path }}/TrashCLI ${{ steps.vars.outputs.arm64-path }}/trash
 
      - run: tar -zcvf trash-${{ steps.vars.outputs.tag }}-darwin-amd64.tar.gz ${{ steps.vars.outputs.amd64-path }}/trash
-     - run: tar -zcvf trash-${{ steps.vars.outputs.tag }}-darwin-amd64.tar.gz ${{ steps.vars.outputs.arm64-path }}/trash
+     - run: tar -zcvf trash-${{ steps.vars.outputs.tag }}-darwin-arm64.tar.gz ${{ steps.vars.outputs.arm64-path }}/trash
 
      - uses: alexellis/upload-assets@0.3.0
        with:
