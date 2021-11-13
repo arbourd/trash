@@ -36,17 +36,18 @@ jobs:
 
      - run: |
          swift build -v -c release --arch x86_64
+       env:
+        TRASHOS_VERSION: ${{ steps.vars.outputs.tag }}
+     - run: |
          swift build -v -c release --arch arm64
        env:
         TRASHOS_VERSION: ${{ steps.vars.outputs.tag }}
 
-     - run: |
-        mv ${{ steps.vars.outputs.amd64-path }}/TrashCLI ${{ steps.vars.outputs.amd64-path }}/trash
-        mv ${{ steps.vars.outputs.arm64-path }}/TrashCLI ${{ steps.vars.outputs.arm64-path }}/trash
+     - run: mv ${{ steps.vars.outputs.amd64-path }}/TrashCLI ${{ steps.vars.outputs.amd64-path }}/trash
+     - run: mv ${{ steps.vars.outputs.arm64-path }}/TrashCLI ${{ steps.vars.outputs.arm64-path }}/trash
 
-     - run: |
-         tar -zcvf trash-${{ steps.vars.outputs.tag }}-darwin-amd64.tar.gz ${{ steps.vars.outputs.amd64-path }}/trash
-         tar -zcvf trash-${{ steps.vars.outputs.tag }}-darwin-amd64.tar.gz ${{ steps.vars.outputs.arm64-path }}/trash
+     - run: tar -zcvf trash-${{ steps.vars.outputs.tag }}-darwin-amd64.tar.gz ${{ steps.vars.outputs.amd64-path }}/trash
+     - run: tar -zcvf trash-${{ steps.vars.outputs.tag }}-darwin-amd64.tar.gz ${{ steps.vars.outputs.arm64-path }}/trash
 
      - uses: alexellis/upload-assets@0.3.0
        with:
