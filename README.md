@@ -6,11 +6,14 @@ Move items to the trash in macOS without having to call `rm -rf`.
 
 ## Install
 
-With [Homebrew](https://brew.sh/)
+With [GoFish](https://gofi.sh/)
 
 ```console
-$ brew install arbourd/tap/trashOS
+$ gofish rig add https://github.com/arbourd/rig
+$ gofish install trash
 ```
+
+Downloading the latest binary from [releases](https://github.com/arbourd/trashOS/releases).
 
 ## Usage
 

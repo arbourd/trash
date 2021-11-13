@@ -13,11 +13,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-11, macos-10.15]
+        os: [macos-11]
 
     steps:
      - uses: actions/checkout@v2
-     - run: swift package generate-xcodeproj
      - run: swiftlint
      - run: swift build -v
      - run: swift test -v
@@ -29,16 +28,18 @@ jobs:
 
     steps:
      - uses: actions/checkout@v2
-     - run: swift package generate-xcodeproj
-     - run: swift build -v -c release
-
      - id: vars
        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
 
+     - run: swift build -v -c release --arch x86_64
      - run: cp .build/x86_64-apple-macosx/release/TrashCLI trash
      - run: tar -zcvf trash-${{ steps.vars.outputs.tag }}-darwin-amd64.tar.gz trash
 
-     - uses: alexellis/upload-assets@0.2.3
+     - run: swift build -v -c release --arch arm64
+     - run: cp .build/arm64-apple-macosx/release/TrashCLI trash
+     - run: tar -zcvf trash-${{ steps.vars.outputs.tag }}-darwin-arm64.tar.gz trash
+
+     - uses: alexellis/upload-assets@0.3.0
        with:
          asset_paths: '["trash*.tar.gz"]'
        env:
