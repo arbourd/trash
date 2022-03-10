@@ -1,0 +1,49 @@
+builds:
+  - id: arm64
+    binary: trash
+    main: hack.go
+    goos:
+      - darwin
+    goarch:
+      - arm64
+    hooks:
+      pre:
+        - swift build -v -c release --arch arm64
+      post:
+        - cp .build/arm64-apple-macosx/release/trash dist/arm64_darwin_arm64
+  - id: amd64
+    binary: trash
+    main: hack.go
+    goos:
+      - darwin
+    goarch:
+      - amd64
+    hooks:
+      pre:
+        - swift build -v -c release --arch x86_64
+      post:
+        - cp .build/x86_64-apple-macosx/release/trash dist/amd64_darwin_amd64
+
+checksum:
+  name_template: 'checksums.txt'
+
+archives:
+  - name_template: 'trash-v{{ .Version }}-{{ .Os }}-{{ .Arch }}'
+
+brews:
+  - name: trash
+    description: Safely move items to macOS trash
+    homepage: https://github.com/arbourd/trashOS
+    folder: Formula
+
+    tap:
+      owner: arbourd
+      name: homebrew-tap
+      token: '{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}'
+
+    test: |
+      assert_match "trash, version #{version}", shell_output("#{bin}/trash --version")
+
+    conflicts:
+      - trash
+      - trash-cli

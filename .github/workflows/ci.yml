@@ -5,51 +5,12 @@ on:
   push:
     branches:
       - main
-    tags:
-      - v*
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [macos-11]
+    runs-on: macos-latest
 
     steps:
-     - uses: actions/checkout@v2
+     - uses: actions/checkout@v3
      - run: swiftlint
      - run: swift test -v
-
-  release:
-    needs: test
-    if: startsWith(github.ref, 'refs/tags/v')
-    runs-on: macos-11
-
-    steps:
-     - uses: actions/checkout@v2
-     - id: vars
-       run: |
-        echo ::set-output name=tag::${GITHUB_REF#refs/*/}
-        echo ::set-output name=amd64-path::$(swift build --show-bin-path -c release --arch x86_64)
-        echo ::set-output name=arm64-path::$(swift build --show-bin-path -c release --arch arm64)
-
-     - run: |
-         swift build -v -c release --arch x86_64
-       env:
-        TRASHOS_VERSION: ${{ steps.vars.outputs.tag }}
-     - run: |
-         swift build -v -c release --arch arm64
-       env:
-        TRASHOS_VERSION: ${{ steps.vars.outputs.tag }}
-
-     - run: mv ${{ steps.vars.outputs.amd64-path }}/TrashCLI ${{ steps.vars.outputs.amd64-path }}/trash
-     - run: mv ${{ steps.vars.outputs.arm64-path }}/TrashCLI ${{ steps.vars.outputs.arm64-path }}/trash
-
-     - run: tar -zcvf trash-${{ steps.vars.outputs.tag }}-darwin-amd64.tar.gz -C ${{ steps.vars.outputs.amd64-path }} trash
-     - run: tar -zcvf trash-${{ steps.vars.outputs.tag }}-darwin-arm64.tar.gz -C ${{ steps.vars.outputs.arm64-path }} trash
-
-     - uses: alexellis/upload-assets@0.3.0
-       with:
-         asset_paths: '["trash*.tar.gz"]'
-       env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

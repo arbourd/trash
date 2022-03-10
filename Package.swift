@@ -4,6 +4,9 @@ import PackageDescription
 
 let package = Package(
     name: "trash",
+    products: [
+        .executable(name: "trash", targets: ["TrashCLI"]),
+    ],
     targets: [
         .target(
             name: "TrashCLI",
