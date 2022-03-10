@@ -33,7 +33,7 @@ archives:
 brews:
   - name: trash
     description: Safely move items to macOS trash
-    homepage: https://github.com/arbourd/trashOS
+    homepage: https://github.com/arbourd/trash
     folder: Formula
 
     tap:

@@ -1,4 +1,4 @@
-# trashOS
+# trash
 
 Move items to the trash in macOS without having to call `rm -rf`.
 
@@ -11,7 +11,7 @@ $ brew tap arbourd/tap
 $ brew install trash
 ```
 
-Downloading the latest binary from [releases](https://github.com/arbourd/trashOS/releases).
+Downloading the latest binary from [releases](https://github.com/arbourd/trash/releases).
 
 ## Usage
 
