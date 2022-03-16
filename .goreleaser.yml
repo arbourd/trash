@@ -34,12 +34,6 @@ brews:
   - name: trash
     description: Safely move items to macOS trash
     homepage: https://github.com/arbourd/trash
-    folder: Formula
-
-    tap:
-      owner: arbourd
-      name: homebrew-tap
-      token: '{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}'
 
     test: |
       assert_match "trash, version #{version}", shell_output("#{bin}/trash --version")
@@ -47,3 +41,14 @@ brews:
     conflicts:
       - trash
       - trash-cli
+
+    folder: Formula
+
+    tap:
+      owner: arbourd
+      name: homebrew-tap
+      token: '{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}'
+
+    commit_author:
+      name: Dylan Arbour
+      email: arbourd@users.noreply.github.com
