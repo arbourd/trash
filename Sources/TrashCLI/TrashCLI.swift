@@ -13,10 +13,11 @@ extension FileHandle: TextOutputStream {
     }
 }
 
+@main 
 struct CLI {
     static var standardError = FileHandle.standardError
 
-    static func run() {
+    static func main() {
         let args = CommandLine.arguments.dropFirst()
 
         switch args.first {
@@ -38,5 +39,3 @@ struct CLI {
         }
     }
 }
-
-CLI.run()
