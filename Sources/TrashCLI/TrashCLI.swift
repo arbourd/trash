@@ -1,7 +1,7 @@
 import Foundation
 import Trash
 
-let version = "0.3.5"
+let version = "0.3.6"
 let usage = """
 Usage: trash [file ...]
 """
@@ -13,7 +13,7 @@ extension FileHandle: TextOutputStream {
     }
 }
 
-@main 
+@main
 struct CLI {
     static var standardError = FileHandle.standardError
 
