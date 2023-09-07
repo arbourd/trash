@@ -11,9 +11,19 @@ jobs:
     runs-on: macos-latest
 
     steps:
-     - uses: actions/checkout@v4
-     - run: swiftlint
-     - run: swift test -v
+      - uses: actions/checkout@v4
+      - id: swift
+        name: swift version
+        run: |
+          version=$(cat .swift-version | tr '\n' ' ')
+          echo $version
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - uses: swift-actions/setup-swift@v1
+        with:
+          swift-version: '${{ steps.swift.outputs.version }}'
+
+      - run: swiftlint
+      - run: swift test -v
 
   build:
     runs-on: macos-latest
@@ -23,16 +33,29 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - id: swift
+        name: swift version
+        run: |
+          version=$(cat .swift-version | tr '\n' ' ')
+          echo $version
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - uses: swift-actions/setup-swift@v1
+        with:
+          swift-version: '${{ steps.swift.outputs.version }}'
 
       - run: swift build -v -c release --arch arm64
       - run: swift build -v -c release --arch x86_64
 
-      - if: startsWith(github.ref, 'refs/tags/v')
-        name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v4
+      - uses: goreleaser/goreleaser-action@v4
         with:
           version: latest
-          args: release --clean
+          install-only: true
+
+      - if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+        run: goreleaser release --clean --snapshot
+
+      - if: startsWith(github.ref, 'refs/tags/v')
+        run: goreleaser release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
