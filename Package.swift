@@ -1,11 +1,11 @@
-// swift-tools-version:5.7
+// swift-tools-version:5.7.3
 
 import PackageDescription
 
 let package = Package(
-    name: "trash",
+    name: "Trash",
     products: [
-        .executable(name: "trash", targets: ["TrashCLI"])
+        .executable(name: "Trash", targets: ["TrashCLI"])
     ],
     targets: [
         .executableTarget(

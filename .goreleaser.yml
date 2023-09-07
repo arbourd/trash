@@ -10,7 +10,7 @@ builds:
       pre:
         - swift build -v -c release --arch arm64
       post:
-        - cp .build/arm64-apple-macosx/release/trash dist/arm64_darwin_arm64
+        - cp .build/arm64-apple-macosx/release/Trash dist/arm64_darwin_arm64/trash
   - id: amd64
     binary: trash
     main: hack.go
@@ -18,11 +18,13 @@ builds:
       - darwin
     goarch:
       - amd64
+    goamd64:
+      - v1
     hooks:
       pre:
         - swift build -v -c release --arch x86_64
       post:
-        - cp .build/x86_64-apple-macosx/release/trash dist/amd64_darwin_amd64
+        - cp .build/x86_64-apple-macosx/release/Trash dist/amd64_darwin_amd64_v1/trash
 
 checksum:
   name_template: 'checksums.txt'
@@ -44,7 +46,7 @@ brews:
 
     folder: Formula
 
-    tap:
+    repository:
       owner: arbourd
       name: homebrew-tap
       token: '{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}'
