@@ -3,16 +3,15 @@
 import PackageDescription
 
 let package = Package(
-    name: "Trash",
+    name: "trash",
+    platforms: [
+        .macOS(.v10_14)
+    ],
     products: [
-        .executable(name: "Trash", targets: ["TrashCLI"])
+        .executable(name: "trash", targets: ["Trash"])
     ],
     targets: [
         .executableTarget(
-            name: "TrashCLI",
-            dependencies: ["Trash"]
-        ),
-        .target(
             name: "Trash"
         ),
         .testTarget(
