@@ -1,6 +1,6 @@
 # trash
 
-Move items to the trash in macOS without having to call `rm -rf`.
+Safely move items to macOS trash asynchronously
 
 ## Install
 
@@ -16,7 +16,7 @@ Downloading the latest binary from [releases](https://github.com/arbourd/trash/r
 ## Usage
 
 ```console
-$ trash [file ...]
+$ trash example.file example-folder *.glob
 ```
 
 ## License

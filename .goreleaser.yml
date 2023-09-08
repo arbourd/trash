@@ -10,7 +10,7 @@ builds:
       pre:
         - swift build -v -c release --arch arm64
       post:
-        - cp .build/arm64-apple-macosx/release/Trash dist/arm64_darwin_arm64/trash
+        - cp .build/arm64-apple-macosx/release/trash dist/arm64_darwin_arm64/trash
   - id: amd64
     binary: trash
     main: hack.go
@@ -24,7 +24,7 @@ builds:
       pre:
         - swift build -v -c release --arch x86_64
       post:
-        - cp .build/x86_64-apple-macosx/release/Trash dist/amd64_darwin_amd64_v1/trash
+        - cp .build/x86_64-apple-macosx/release/trash dist/amd64_darwin_amd64_v1/trash
 
 checksum:
   name_template: 'checksums.txt'
@@ -34,13 +34,14 @@ archives:
 
 brews:
   - name: trash
-    description: Safely move items to macOS trash
+    description: Safely move items to macOS trash asynchronously
     homepage: https://github.com/arbourd/trash
 
     test: |
       assert_match "trash, version #{version}", shell_output("#{bin}/trash --version")
 
     conflicts:
+      - macos-trash
       - trash
       - trash-cli
 
