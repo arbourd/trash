@@ -48,7 +48,7 @@ jobs:
       - run: swift build -v -c release --arch arm64
       - run: swift build -v -c release --arch x86_64
 
-      - uses: goreleaser/goreleaser-action@v4
+      - uses: goreleaser/goreleaser-action@v5
         with:
           version: latest
           install-only: true
