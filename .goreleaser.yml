@@ -45,7 +45,7 @@ brews:
       - trash
       - trash-cli
 
-    folder: Formula
+    directory: Formula
 
     repository:
       owner: arbourd
