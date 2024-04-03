@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    runs-on: macos-latest
+    runs-on: macos-14
 
     steps:
       - uses: actions/checkout@v4
@@ -24,11 +24,14 @@ jobs:
         with:
           swift-version: '${{ steps.swift.outputs.version }}'
 
-      - run: swiftlint
+      - name: Run swiftlint
+        run: |
+          brew install swiftlint
+          swiftlint
       - run: swift test -v
 
   build:
-    runs-on: macos-latest
+    runs-on: macos-14
     needs: [test]
 
     steps:
@@ -48,6 +51,7 @@ jobs:
       - run: swift build -v -c release --arch arm64
       - run: swift build -v -c release --arch x86_64
 
+      - run: brew install go
       - uses: goreleaser/goreleaser-action@v5
         with:
           version: latest
