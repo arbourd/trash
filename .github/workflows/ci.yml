@@ -20,7 +20,7 @@ jobs:
           version=$(cat .swift-version | tr '\n' ' ')
           echo $version
           echo "version=$version" >> "$GITHUB_OUTPUT"
-      - uses: swift-actions/setup-swift@v2
+      - uses: swift-actions/setup-swift@v3
         with:
           swift-version: '${{ steps.swift.outputs.version }}'
 
@@ -44,7 +44,7 @@ jobs:
           version=$(cat .swift-version | tr '\n' ' ')
           echo $version
           echo "version=$version" >> "$GITHUB_OUTPUT"
-      - uses: swift-actions/setup-swift@v2
+      - uses: swift-actions/setup-swift@v3
         with:
           swift-version: '${{ steps.swift.outputs.version }}'
 
