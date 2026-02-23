@@ -52,7 +52,7 @@ jobs:
       - run: swift build -v -c release --arch x86_64
 
       - run: brew install go
-      - uses: goreleaser/goreleaser-action@v6
+      - uses: goreleaser/goreleaser-action@v7
         with:
           version: latest
           install-only: true
