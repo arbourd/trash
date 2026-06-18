@@ -13,7 +13,7 @@ jobs:
     runs-on: macos-14
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - id: swift
         name: swift version
         run: |
@@ -35,7 +35,7 @@ jobs:
     needs: [test]
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - id: swift
