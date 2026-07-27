@@ -37,24 +37,35 @@ extension FileHandle: TextOutputStream {
 struct CLI {
     nonisolated(unsafe) static var standardError = FileHandle.standardError
 
-    static func main() {
-        let args = Array(CommandLine.arguments.dropFirst())
-
+    static func run(_ args: [String]) -> (output: String, exitCode: Int32) {
         switch args.first {
         case nil:
-            print(usage)
+            return (usage, 0)
         case "-h"?, "--help"?:
-            print(usage)
+            return (usage, 0)
         case "-v"?, "--version"?:
-            print("trash, version " + version)
+            return ("trash, version " + version, 0)
         default:
             do {
                 try Trash.put(args)
-                exit(0)
+                return ("", 0)
             } catch {
-                print(error.localizedDescription, to: &standardError)
-                exit(1)
+                return (error.localizedDescription, 1)
             }
         }
+    }
+
+    static func main() {
+        let args = Array(CommandLine.arguments.dropFirst())
+        let result = run(args)
+
+        if result.exitCode == 0 {
+            if !result.output.isEmpty {
+                print(result.output)
+            }
+        } else {
+            print(result.output, to: &standardError)
+        }
+        exit(result.exitCode)
     }
 }

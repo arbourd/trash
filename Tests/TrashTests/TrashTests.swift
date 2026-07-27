@@ -1,64 +1,94 @@
 import Foundation
 import XCTest
-import Trash
+@testable import Trash
 
 class TrashTests: XCTestCase {
-    private var path: String!
+    private var directory: URL!
 
     // MARK: - XCTestCase
     override func setUp() {
         super.setUp()
-        path = NSTemporaryDirectory()
+        directory = URL(fileURLWithPath: NSTemporaryDirectory())
     }
 
-    override func tearDown() {
-        super.tearDown()
+    // MARK: - Helpers
+
+    // Creates an empty file under the test's temp directory and returns its path.
+    private func makeTestFile(_ name: String) -> String {
+        let path = directory.appendingPathComponent(name).path
+        FileManager.default.createFile(atPath: path, contents: nil)
+        XCTAssertTrue(FileManager.default.fileExists(atPath: path))
+        return path
     }
 
-    // MARK: - Tests
+    // MARK: - Trash.put tests
+
     func testTrashNotFound() {
-        let paths = [path + "missing_test.file"]
-
-        /// Ensure the file does not exist
+        let paths = [directory.appendingPathComponent("missing_test.file").path]
         XCTAssertFalse(FileManager.default.fileExists(atPath: paths[0]))
 
-        /// Check that Trash throws when files are not found
-        XCTAssertThrowsError(try Trash.put(paths))
+        XCTAssertThrowsError(try Trash.put(paths)) { error in
+            let nsError = error as NSError
+            XCTAssertEqual(nsError.domain, NSCocoaErrorDomain)
+            XCTAssertEqual(nsError.code, NSFileNoSuchFileError)
+        }
     }
 
     func testTrashSuccess() {
-        let paths = [path + "test.file"]
-        FileManager.default.createFile(atPath: paths[0], contents: nil)
+        let path = makeTestFile("test.file")
 
-        /// Check if test file was created
-        XCTAssertTrue(FileManager.default.fileExists(atPath: paths[0]))
-
-        /// Trash test file
-        XCTAssertNoThrow(try Trash.put(paths))
-
-        /// Check if the file was removed
-        XCTAssertFalse(FileManager.default.fileExists(atPath: paths[0]))
+        XCTAssertNoThrow(try Trash.put([path]))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: path))
     }
 
     func testTrashManySuccess() {
-        var paths: [String] = []
-        for index in [1, 2, 3] {
-            paths.append(String(format: "%stest%d.file", path, index))
-        }
+        let paths = (1...3).map { makeTestFile("test\($0).file") }
 
-        for path in paths {
-            FileManager.default.createFile(atPath: path, contents: nil)
-
-            /// Check if test file was created
-            XCTAssertTrue(FileManager.default.fileExists(atPath: path))
-        }
-
-        /// Trash test files
         XCTAssertNoThrow(try Trash.put(paths))
 
         for path in paths {
-            /// Check if the file was removed
             XCTAssertFalse(FileManager.default.fileExists(atPath: path))
         }
+    }
+
+    // MARK: - CLI tests
+
+    func testCLINoArgs() {
+        let result = CLI.run([])
+        XCTAssertTrue(result.output.hasPrefix("Usage: trash"))
+        XCTAssertEqual(result.exitCode, 0)
+    }
+
+    func testCLIHelp() {
+        for flag in ["-h", "--help"] {
+            let result = CLI.run([flag])
+            XCTAssertTrue(result.output.hasPrefix("Usage: trash"))
+            XCTAssertEqual(result.exitCode, 0)
+        }
+    }
+
+    func testCLIVersion() {
+        for flag in ["-v", "--version"] {
+            let result = CLI.run([flag])
+            XCTAssertTrue(result.output.hasPrefix("trash, version "))
+            XCTAssertEqual(result.exitCode, 0)
+        }
+    }
+
+    func testCLITrashSuccess() {
+        let path = makeTestFile("cli_test.file")
+
+        let result = CLI.run([path])
+        XCTAssertEqual(result.output, "")
+        XCTAssertEqual(result.exitCode, 0)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: path))
+    }
+
+    func testCLITrashNotFound() {
+        let path = directory.appendingPathComponent("cli_missing.file").path
+
+        let result = CLI.run([path])
+        XCTAssertFalse(result.output.isEmpty)
+        XCTAssertEqual(result.exitCode, 1)
     }
 }
