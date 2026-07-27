@@ -6,6 +6,14 @@ asynchronously (via `NSWorkspace.recycle`).
 - `Sources/Trash/Trash.swift` — the entire app. `Trash.put` spins
   `CFRunLoopRun()`/`CFRunLoopStop` to block on `NSWorkspace.recycle`'s
   async-only completion handler — don't "simplify" this into an early return.
+  The `nonisolated(unsafe)` on `Trash.put`'s local `error` and on
+  `CLI.standardError` is safe, not dead code: `error` is only ever written
+  from inside the completion handler and only ever read after
+  `CFRunLoopRun()` returns, which the run loop guarantees happens after
+  that write; `standardError` is assigned once at startup and only ever
+  touched from `CLI.main()`'s single thread. Don't remove either
+  annotation — Swift 6 strict concurrency checking will fail to compile
+  without them.
 - `Tests/TrashTests/TrashTests.swift` — XCTest suite.
 
 ## Build / test / run
