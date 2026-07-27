@@ -8,7 +8,7 @@ Usage: trash [file ...]
 
 public struct Trash {
     public static func put(_ paths: [String]) throws {
-        var error: NSError?
+        nonisolated(unsafe) var error: NSError?
         let urls = paths.map(URL.init(fileURLWithPath:))
         let loop = CFRunLoopGetCurrent()
 
@@ -35,7 +35,7 @@ extension FileHandle: TextOutputStream {
 
 @main
 struct CLI {
-    static var standardError = FileHandle.standardError
+    nonisolated(unsafe) static var standardError = FileHandle.standardError
 
     static func main() {
         let args = Array(CommandLine.arguments.dropFirst())
