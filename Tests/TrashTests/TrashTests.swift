@@ -23,28 +23,31 @@ class TrashTests: XCTestCase {
 
     // MARK: - Trash.put tests
 
-    func testTrashNotFound() {
+    func testTrashNotFound() async throws {
         let paths = [directory.appendingPathComponent("missing_test.file").path]
         XCTAssertFalse(FileManager.default.fileExists(atPath: paths[0]))
 
-        XCTAssertThrowsError(try Trash.put(paths)) { error in
+        do {
+            try await Trash.put(paths)
+            XCTFail("expected Trash.put to throw")
+        } catch {
             let nsError = error as NSError
             XCTAssertEqual(nsError.domain, NSCocoaErrorDomain)
             XCTAssertEqual(nsError.code, NSFileNoSuchFileError)
         }
     }
 
-    func testTrashSuccess() {
+    func testTrashSuccess() async throws {
         let path = makeTestFile("test.file")
 
-        XCTAssertNoThrow(try Trash.put([path]))
+        try await Trash.put([path])
         XCTAssertFalse(FileManager.default.fileExists(atPath: path))
     }
 
-    func testTrashManySuccess() {
+    func testTrashManySuccess() async throws {
         let paths = (1...3).map { makeTestFile("test\($0).file") }
 
-        XCTAssertNoThrow(try Trash.put(paths))
+        try await Trash.put(paths)
 
         for path in paths {
             XCTAssertFalse(FileManager.default.fileExists(atPath: path))
@@ -53,41 +56,41 @@ class TrashTests: XCTestCase {
 
     // MARK: - CLI tests
 
-    func testCLINoArgs() {
-        let result = CLI.run([])
+    func testCLINoArgs() async throws {
+        let result = await CLI.run([])
         XCTAssertTrue(result.output.hasPrefix("Usage: trash"))
         XCTAssertEqual(result.exitCode, 0)
     }
 
-    func testCLIHelp() {
+    func testCLIHelp() async throws {
         for flag in ["-h", "--help"] {
-            let result = CLI.run([flag])
+            let result = await CLI.run([flag])
             XCTAssertTrue(result.output.hasPrefix("Usage: trash"))
             XCTAssertEqual(result.exitCode, 0)
         }
     }
 
-    func testCLIVersion() {
+    func testCLIVersion() async throws {
         for flag in ["-v", "--version"] {
-            let result = CLI.run([flag])
+            let result = await CLI.run([flag])
             XCTAssertTrue(result.output.hasPrefix("trash, version "))
             XCTAssertEqual(result.exitCode, 0)
         }
     }
 
-    func testCLITrashSuccess() {
+    func testCLITrashSuccess() async throws {
         let path = makeTestFile("cli_test.file")
 
-        let result = CLI.run([path])
+        let result = await CLI.run([path])
         XCTAssertEqual(result.output, "")
         XCTAssertEqual(result.exitCode, 0)
         XCTAssertFalse(FileManager.default.fileExists(atPath: path))
     }
 
-    func testCLITrashNotFound() {
+    func testCLITrashNotFound() async throws {
         let path = directory.appendingPathComponent("cli_missing.file").path
 
-        let result = CLI.run([path])
+        let result = await CLI.run([path])
         XCTAssertFalse(result.output.isEmpty)
         XCTAssertEqual(result.exitCode, 1)
     }
