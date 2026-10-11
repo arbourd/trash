@@ -10,7 +10,7 @@ public struct Trash {
     public static func put(_ paths: [String]) throws {
         nonisolated(unsafe) var error: NSError?
         let urls = paths.map(URL.init(fileURLWithPath:))
-        let loop = CFRunLoopGetCurrent()
+        nonisolated(unsafe) let loop = CFRunLoopGetCurrent()
 
         DispatchQueue.main.async {
             NSWorkspace.shared.recycle(urls, completionHandler: { _, err in

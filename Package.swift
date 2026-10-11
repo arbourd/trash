@@ -1,11 +1,11 @@
-// swift-tools-version:6.3.3
+// swift-tools-version:6.4
 
 import PackageDescription
 
 let package = Package(
     name: "trash",
     platforms: [
-        .macOS(.v10_14)
+        .macOS(.v12)
     ],
     products: [
         .executable(name: "trash", targets: ["Trash"])

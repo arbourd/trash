@@ -25,7 +25,12 @@ swift run trash <paths>
 swiftlint             # same rules CI runs; no config file
 ```
 
-CI also runs `swiftlint` (default rules, no config file) before tests.
+Requires the Swift toolchain pinned in `.swift-version` (`Package.swift` uses tools-version 6.4).
+
+## Release builds
+
+arm64 and x86_64 builds use separate `--scratch-path`s (`.build-arm64`, `.build-x86_64`)
+on purpose, to avoid a race between the two builds. Don't merge them.
 
 ## Releasing
 
