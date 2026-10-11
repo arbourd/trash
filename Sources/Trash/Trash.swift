@@ -7,22 +7,9 @@ Usage: trash [file ...]
 """
 
 public struct Trash {
-    public static func put(_ paths: [String]) throws {
-        nonisolated(unsafe) var error: NSError?
+    public static func put(_ paths: [String]) async throws {
         let urls = paths.map(URL.init(fileURLWithPath:))
-        nonisolated(unsafe) let loop = CFRunLoopGetCurrent()
-
-        DispatchQueue.main.async {
-            NSWorkspace.shared.recycle(urls, completionHandler: { _, err in
-                error = err as NSError?
-                CFRunLoopStop(loop)
-            })
-        }
-        CFRunLoopRun()
-
-        if error != nil {
-            throw error!
-        }
+        _ = try await NSWorkspace.shared.recycle(urls)
     }
 }
 
@@ -37,7 +24,7 @@ extension FileHandle: TextOutputStream {
 struct CLI {
     nonisolated(unsafe) static var standardError = FileHandle.standardError
 
-    static func run(_ args: [String]) -> (output: String, exitCode: Int32) {
+    static func run(_ args: [String]) async -> (output: String, exitCode: Int32) {
         switch args.first {
         case nil:
             return (usage, 0)
@@ -47,7 +34,7 @@ struct CLI {
             return ("trash, version " + version, 0)
         default:
             do {
-                try Trash.put(args)
+                try await Trash.put(args)
                 return ("", 0)
             } catch {
                 return (error.localizedDescription, 1)
@@ -55,9 +42,9 @@ struct CLI {
         }
     }
 
-    static func main() {
+    static func main() async {
         let args = Array(CommandLine.arguments.dropFirst())
-        let result = run(args)
+        let result = await run(args)
 
         if result.exitCode == 0 {
             if !result.output.isEmpty {
