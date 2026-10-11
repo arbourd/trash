@@ -48,6 +48,9 @@ jobs:
         with:
           swift-version: '${{ steps.swift.outputs.version }}'
 
+      # swiftly rewrites .swift-version, which makes goreleaser see a dirty tree
+      - run: git checkout -- .swift-version
+
       - run: swift build -v -c release --arch arm64 --scratch-path .build-arm64
       - run: swift build -v -c release --arch x86_64 --scratch-path .build-x86_64
 
