@@ -1,7 +1,7 @@
 import Foundation
 import AppKit
 
-let version = "0.3.7"
+let version = "0.4.0"
 let usage = """
 Usage: trash [file ...]
 """
