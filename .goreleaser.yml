@@ -33,27 +33,3 @@ checksum:
 
 archives:
   - name_template: 'trash-v{{ .Version }}-{{ .Os }}-{{ .Arch }}'
-
-brews:
-  - name: trash
-    description: Safely move items to macOS trash asynchronously
-    homepage: https://github.com/arbourd/trash
-
-    test: |
-      assert_match "trash, version #{version}", shell_output("#{bin}/trash --version")
-
-    conflicts:
-      - macos-trash
-      - trash
-      - trash-cli
-
-    directory: Formula
-
-    repository:
-      owner: arbourd
-      name: homebrew-tap
-      token: '{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}'
-
-    commit_author:
-      name: Dylan Arbour
-      email: arbourd@users.noreply.github.com
