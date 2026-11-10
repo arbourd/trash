@@ -8,6 +8,9 @@ on:
     tags:
       - v*
 
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: macos-latest
@@ -33,6 +36,8 @@ jobs:
   build:
     runs-on: macos-latest
     needs: [test]
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v7
