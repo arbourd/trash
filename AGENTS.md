@@ -23,6 +23,7 @@ swift build
 swift test -v
 swift run trash <paths>
 swiftlint             # same rules CI runs; no config file
+actionlint            # run after changing anything under .github/workflows
 ```
 
 Requires the Swift toolchain pinned in `.swift-version` (`Package.swift` uses tools-version 6.4).
