@@ -16,14 +16,14 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - id: swift
         name: swift version
         run: |
           version=$(cat .swift-version | tr '\n' ' ')
           echo $version
           echo "version=$version" >> "$GITHUB_OUTPUT"
-      - uses: swift-actions/setup-swift@v3
+      - uses: swift-actions/setup-swift@364295d9c23900ce04d4e5cc708387921b4e50f9 # v3
         with:
           swift-version: '${{ steps.swift.outputs.version }}'
 
@@ -40,7 +40,7 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
       - id: swift
@@ -49,7 +49,7 @@ jobs:
           version=$(cat .swift-version | tr '\n' ' ')
           echo $version
           echo "version=$version" >> "$GITHUB_OUTPUT"
-      - uses: swift-actions/setup-swift@v3
+      - uses: swift-actions/setup-swift@364295d9c23900ce04d4e5cc708387921b4e50f9 # v3
         with:
           swift-version: '${{ steps.swift.outputs.version }}'
 
@@ -60,7 +60,7 @@ jobs:
       - run: swift build -v -c release --arch x86_64 --scratch-path .build-x86_64
 
       - run: brew install go
-      - uses: goreleaser/goreleaser-action@v7
+      - uses: goreleaser/goreleaser-action@a4f02ab5355a589de60d917a659ce617ed19b3de # v7
         with:
           version: latest
           install-only: true
