@@ -33,3 +33,7 @@ checksum:
 
 archives:
   - name_template: 'trash-v{{ .Version }}-{{ .Os }}-{{ .Arch }}'
+    files:
+      - LICENSE
+      - README.md
+      - skills/trash/SKILL.md
