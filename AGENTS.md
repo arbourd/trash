@@ -3,39 +3,24 @@
 `trash` is a small Swift CLI that moves files/folders to the macOS Trash
 asynchronously (via `NSWorkspace.recycle`).
 
-- `Sources/Trash/Trash.swift` — the entire app. `Trash.put` awaits the async
-  `NSWorkspace.recycle`. The `nonisolated(unsafe)` on `CLI.standardError` is
-  safe, not dead code: it's assigned once at startup and only touched from
-  `CLI.main()`'s single thread. Don't remove it — Swift 6 strict concurrency
-  checking will fail to compile without it.
-- `Tests/TrashTests/TrashTests.swift` — XCTest suite. Tests move real files from
-  `NSTemporaryDirectory()` into the actual Trash; no network, no fixtures.
-- `.github/workflows/ci.yml` — test (swiftlint + `swift test`) → build (both arches
-  + goreleaser): snapshot on branches, real release on `v*` tags.
-- `.github/renovate.json` — Renovate: pins Actions to digests (7-day cooldown,
-  `actions/*` automerge) and bumps `.swift-version` from `swiftlang/swift` releases.
-
-## CLI behavior
-
-No args, `-h`/`--help` print usage, exit 0. `-v`/`--version` print the `version`
-constant, exit 0. Otherwise every arg is a path to trash. Errors go to stderr, exit 1.
+- `Sources/Trash/Trash.swift` — the whole app. Keep `nonisolated(unsafe)` on
+  `CLI.standardError`: it's assigned once at startup and only touched from
+  `CLI.main()`'s single thread, and Swift 6 strict concurrency won't compile without it.
+- `Tests/TrashTests/TrashTests.swift` — tests move real files into the actual Trash.
+- `skills/trash/SKILL.md` — agent skill documenting CLI behavior (args, flags, exit
+  codes). Update it when that behavior changes.
 
 ## Constraints
 
 Zero package dependencies — keep `Package.swift` dependency-free.
 
-## Build / test / run
+## Checks
 
 ```sh
-swift build
-swift test -v
-swift run trash <paths>
 swiftlint             # same rules CI runs; no config file
 actionlint            # run after changing anything under .github/workflows
-npx --yes --package renovate -- renovate-config-validator --strict  # run after changing .github/renovate.json
+bunx --package renovate renovate-config-validator --strict  # run after changing .github/renovate.json
 ```
-
-Requires the Swift toolchain pinned in `.swift-version` (`Package.swift` uses tools-version 6.4).
 
 ## Release builds
 
