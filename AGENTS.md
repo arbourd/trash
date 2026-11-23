@@ -1,6 +1,6 @@
 # AGENTS.md
 
-`trash` is a small Swift CLI, invoked as `trash`, that moves files/folders to the macOS Trash asynchronously (via `NSWorkspace.recycle`). The whole app lives in `Sources/Trash/Trash.swift`.
+`trash` is a Swift CLI that moves files and folders to the macOS Trash asynchronously through `NSWorkspace.recycle`. Its implementation is in `Sources/Trash/Trash.swift`.
 
 ## Commands
 
@@ -10,22 +10,18 @@ actionlint            # lint .github/workflows; run after changing anything ther
 bunx --package renovate renovate-config-validator --strict  # run after changing .github/renovate.json
 ```
 
-`trash` moves real files into the actual Trash, so try it only on disposable files.
+Tests in `Tests/TrashTests/TrashTests.swift` move files into the actual macOS Trash. Run them only after confirming their fixtures are disposable.
 
 When args, flags, or exit codes change, update `skills/trash/SKILL.md`.
 
 ## Hard constraints
 
-**Dependencies:** zero package dependencies; keep `Package.swift` dependency-free.
+**Dependencies:** Keep `Package.swift` dependency-free.
 
-**Concurrency:** keep `nonisolated(unsafe)` on `CLI.standardError`. It is assigned once at startup and only touched from `CLI.main()`'s single thread, and Swift 6 strict concurrency won't compile without it.
+**Concurrency:** Preserve `nonisolated(unsafe)` on `CLI.standardError`. It is assigned once at startup and only accessed from `CLI.main()`'s single thread; Swift 6 strict concurrency requires the annotation.
 
-**Release builds:** give the arm64 and x86_64 builds separate `--scratch-path`s (`.build-arm64`, `.build-x86_64`) on purpose, to avoid a race between the two builds.
+**Release builds:** Keep separate scratch paths for the arm64 and x86_64 builds (`.build-arm64` and `.build-x86_64`) to prevent build races.
 
-**Releasing:** bump `Trash.swift`'s hardcoded `version` constant to match the new tag *before* tagging (see e.g. commit "Cut 0.3.7"). Nothing enforces this; `trash --version` just prints the constant.
+**Releasing:** Before tagging a release, set the hardcoded `version` constant in `Trash.swift` to match the tag. `trash --version` prints this constant; no automation checks it.
 
-**Build config:** `hack.go` is an empty Go stub that only gives goreleaser a `main:` to point at (it builds only Go projects); leave it untouched. The real build is Swift, driven by `.goreleaser.yml` hooks, so change the build in `.goreleaser.yml` or `Package.swift`.
-
-## Testing
-
-- Tests in `Tests/TrashTests/TrashTests.swift` move real files into the actual Trash.
+**Build config:** The Swift build runs through `.goreleaser.yml` hooks. Keep `hack.go` as the empty Go stub GoReleaser needs for its `main:` field; make build changes in `.goreleaser.yml` or `Package.swift`.
